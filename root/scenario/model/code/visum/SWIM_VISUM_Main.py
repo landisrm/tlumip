@@ -817,6 +817,16 @@ class SwimModel(object):
 
                 azonemat = VisumHelpers.GetSkimMatrix(self.Visum, VisumMatIndex)
                 fileName = timePeriods[timeIndex] + matName[matheaders[0]][matCount] + '.zmx'
+                
+                #double portland times
+                if matName[matheaders[0]][matCount] == "autotime" or matName[matheaders[0]][matCount] == "trk1time":
+                  mpoCodes = VisumHelpers.GetMulti(self.Visum.Net.Zones, "MPOMODELEDZONES")
+                  scaleFactor = 2
+                  print("Portland has been doubled, see; was " + str(azonemat[1,2]) + ", now " + str(azonemat[1,2]* scaleFactor))      
+                  for i in range(0,len(azonemat)):
+                    for j in range(0,len(azonemat)):
+                      if mpoCodes[i] == "Metro" and mpoCodes[j] == "Metro":
+                        azonemat[i,j] = azonemat[i,j] * scaleFactor
 
                 #write azone skim matrices to zmx format
                 self.writeZMX(fileName, self.zoneNames, azonemat)
